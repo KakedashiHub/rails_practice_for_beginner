@@ -2,13 +2,17 @@ class SessionsController < ApplicationController
   def new; end
 
   def create
-    user = User.find_by(email: params[:email])
-    if user.present? && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      redirect_to questions_path, success: 'ログインしました'
+    if user = User.find_by(email: params[:email])
     else
-      flash.now[:danger] = 'ログインに失敗しました'
-      render :new
+       user = User.find_by(name: params[:email])
+    end
+
+    if user.present? && user.authenticate(params[:password]) && (params[:email] == user.email || params[:email] == user.name)
+       session[:user_id] = user.id
+       redirect_to questions_path, success: 'ログインしました'
+    else
+       flash.now[:danger] = 'ログインに失敗しました'
+       render :new
     end
   end
 

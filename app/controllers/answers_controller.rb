@@ -27,6 +27,10 @@ class AnswersController < ApplicationController
     redirect_to question_path(params[:question_id]), success: '回答を削除しました'
   end
 
+  def update
+    @answer = current_user.answers.find(params[:id])
+  end
+
   private
 
   def answer_params
